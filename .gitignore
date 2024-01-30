@@ -1,8 +1,10 @@
 backend/node_modules/
 frontend/client/node_modules/
 
+
 frontend/coverage
 
+.env
 .DS_Store
 .env.local
 .env.development.local
