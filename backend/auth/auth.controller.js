@@ -44,7 +44,6 @@ const changePassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
 
     const userId = req.user.userId;
-
     const user = await User.findByPk(userId);
 
     const isMatch = await user.comparePassword(oldPassword);
@@ -52,7 +51,7 @@ const changePassword = async (req, res) => {
       return res.status(401).json({ message: "Incorrect old password" });
     }
 
-    const hashedNewPassword = await hash(newPassword, 10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedNewPassword;
     await user.save();
 

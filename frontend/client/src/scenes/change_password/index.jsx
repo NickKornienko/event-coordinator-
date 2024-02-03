@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Box, Typography, TextField, Button, Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import AuthService from "../../services/AuthService.js";
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -17,6 +19,7 @@ const ChangePassword = () => {
     try {
       await AuthService.changePassword(oldPassword, newPassword);
       alert("Password successfully changed!");
+      navigate("/account");
     } catch (error) {
       console.error("Error changing password:", error);
       alert("Failed to change password.");

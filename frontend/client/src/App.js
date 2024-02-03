@@ -11,16 +11,15 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Topbar from "./components/Topbar";
-import Sidebar from "./components/Sidebar";
 import Login from "./scenes/login";
 import Register from "./scenes/register";
 import Dashboard from "./scenes/dashboard";
 import ChangePassword from "./scenes/change_password";
+import Account from "./scenes/account";
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSidebar, setIsSidebar] = useState(true);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -33,12 +32,9 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Router>
-            {" "}
-            {/* Router added here */}
             <div className="app">
-              {isLoggedIn && <Sidebar isSidebar={isSidebar} />}
               <main className={isLoggedIn ? "content" : ""}>
-                {isLoggedIn && <Topbar setIsSidebar={setIsSidebar} />}
+                {isLoggedIn && <Topbar />}
                 <Routes>
                   <Route
                     path="/"
@@ -63,6 +59,8 @@ function App() {
                         path="/change_password"
                         element={<ChangePassword />}
                       />
+                      <Route path="/account" element={<Account />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
                     </>
                   ) : (
                     <Route path="*" element={<Navigate to="/login" />} />
