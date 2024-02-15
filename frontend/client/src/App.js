@@ -16,6 +16,7 @@ import Register from "./scenes/register";
 import Dashboard from "./scenes/dashboard";
 import ChangePassword from "./scenes/change_password";
 import Account from "./scenes/account";
+import CreateEvent from "./scenes/create_event";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -61,6 +62,7 @@ function App() {
                       />
                       <Route path="/account" element={<Account />} />
                       <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/create_event" element={<CreateEvent />} />
                     </>
                   ) : (
                     <Route path="*" element={<Navigate to="/login" />} />

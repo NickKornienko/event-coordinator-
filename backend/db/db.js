@@ -7,6 +7,8 @@ const sequelize = new Sequelize({
 
 // Define all models
 const User = require("./models/user.model")(sequelize, DataTypes);
+const Event = require("./models/event.model")(sequelize, DataTypes);
+const Attendee = require("./models/attendee.model")(sequelize, DataTypes);
 
 const initializeDatabase = async () => {
     try {
@@ -19,4 +21,4 @@ const initializeDatabase = async () => {
     }
 };
 
-module.exports = {initializeDatabase, User};
+module.exports = {initializeDatabase, User, Event, Attendee};
