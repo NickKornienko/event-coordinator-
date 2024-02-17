@@ -59,11 +59,19 @@ const CreateEventForm = () => {
           margin="normal"
           value={numberOfSlots}
           onChange={(e) => setNumberOfSlots(e.target.value)}
+          InputProps={{
+            inputProps: {
+              min: 1,
+              max: 10,
+              step: 1,
+            },
+          }}
           InputLabelProps={{
             style: { color: "black" },
           }}
           sx={textFieldStyle}
         />
+
         <TextField
           label="Date"
           variant="outlined"

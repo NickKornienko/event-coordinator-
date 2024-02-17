@@ -1,23 +1,31 @@
 module.exports = (sequelize, DataTypes) => {
-    const Attendee = sequelize.define("Attendee", {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+  const Attendee = sequelize.define("Attendee", {
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
       },
-      eventId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Events',
-          key: 'id',
-        }
+    },
+    eventId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Events",
+        key: "id",
       },
-    });
-  
-    Attendee.associate = models => {
-      Attendee.belongsTo(models.Event, { foreignKey: 'eventId' });
-    };
-  
-    return Attendee;
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+
+  Attendee.associate = (models) => {
+    Attendee.belongsTo(models.User, { foreignKey: "userId" });
+    Attendee.belongsTo(models.Event, { foreignKey: "eventId" });
   };
-  
+
+  return Attendee;
+};

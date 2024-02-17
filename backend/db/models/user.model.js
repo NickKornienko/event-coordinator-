@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
+  User.associate = (models) => {
+    User.hasMany(models.Attendee, { foreignKey: "userId" });
+    User.hasMany(models.Event, { foreignKey: "hostId" });
+  };
+
   User.prototype.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
   };

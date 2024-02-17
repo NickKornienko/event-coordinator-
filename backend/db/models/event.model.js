@@ -16,19 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    hostId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-    },
   });
 
   Event.associate = (models) => {
-    Event.belongsTo(models.User, { as: "host", foreignKey: "hostId" });
-    Event.hasMany(models.Attendee, { as: "attendees" });
+    Event.hasMany(models.Attendee, { foreignKey: "eventId" });
+    Event.belongsTo(models.User, { foreignKey: "hostId" });
   };
 
   return Event;
