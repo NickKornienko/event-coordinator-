@@ -71,7 +71,7 @@ const get_events = async (req, res) => {
       eventName: event.eventName,
       date: event.date,
       time: event.time,
-      slots: event.size,
+      size: event.size,
       attendees: event.Attendees.map((attendee) => ({
         name: attendee.User.name,
         role: attendee.role,

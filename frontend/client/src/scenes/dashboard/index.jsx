@@ -64,88 +64,98 @@ const Dashboard = () => {
       </Typography>
       {events
         .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .map((event) => (
-          <Box
-            key={event.id}
-            sx={{
-              mb: 4,
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: 3,
-            }}
-          >
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <Typography variant="h5" sx={{ mb: 2 }}>
-                {event.eventName}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                Date: {event.date}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 3 }}>
-                Time: {event.time}
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table sx={{ mb: 2 }}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Attendee Name</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {Array.from({ length: event.slots }).map((_, index) => {
-                      // Check if there is an attendee for the current index
-                      const attendee = event.attendees.find(
-                        (att) => att.slot === index
-                      );
-
-                      return (
-                        <TableRow key={`event-${event.id}-slot-${index}`}>
-                          <TableCell>
-                            {attendee ? attendee.name : "Slot available"}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                {/* Conditional rendering for host actions */}
-                {user && user.role === "host" && user.id === event.hostId && (
-                  <>
+        .map(
+          (
+            singleEvent,
+            eventIndex // Changed variable name to singleEvent
+          ) => (
+            <Box
+              key={singleEvent.id}
+              sx={{
+                mb: 4,
+                borderRadius: "16px",
+                overflow: "hidden",
+                boxShadow: 3,
+              }}
+            >
+              <Paper elevation={3} sx={{ p: 2 }}>
+                <Typography variant="h5" sx={{ mb: 2 }}>
+                  {singleEvent.eventName}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Date: {singleEvent.date}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  Time: {singleEvent.time}
+                </Typography>
+                <TableContainer component={Paper}>
+                  <Table sx={{ mb: 2 }}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Attendees</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Array.from({ length: singleEvent.size }).map(
+                        (_, index) => (
+                          <TableRow
+                            key={`event-${singleEvent.id}-row-${index}`}
+                            sx={{
+                              bgcolor:
+                                index === 0 ? "rgba(0, 0, 0, 0.04)" : "none",
+                            }}
+                          >
+                            <TableCell>{"Slot available"}</TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {/* Conditional rendering for host actions */}
+                  {user &&
+                    user.role === "host" &&
+                    user.id === singleEvent.hostId && (
+                      <>
+                        <Button
+                          onClick={() =>
+                            handleEdit(
+                              singleEvent.id,
+                              singleEvent.eventName,
+                              singleEvent.size,
+                              singleEvent.date,
+                              singleEvent.time
+                            )
+                          }
+                          sx={{ mr: 1 }}
+                        >
+                          Edit
+                        </Button>
+                        <Button onClick={() => handleDelete(singleEvent.id)}>
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  {/* Button for attendee actions */}
+                  {user && user.role !== "host" && (
                     <Button
                       onClick={() =>
-                        handleEdit(
-                          event.id,
-                          event.eventName,
-                          event.size,
-                          event.date,
-                          event.time
+                        handleAttendance(
+                          singleEvent.id,
+                          user.id,
+                          !user.isAttending
                         )
                       }
-                      sx={{ mr: 1 }}
                     >
-                      Edit
+                      Change Attendance
                     </Button>
-                    <Button onClick={() => handleDelete(event.id)}>
-                      Delete
-                    </Button>
-                  </>
-                )}
-                {/* Button for attendee actions */}
-                {user && user.role !== "host" && (
-                  <Button
-                    onClick={() =>
-                      handleAttendance(event.id, user.id, !user.isAttending)
-                    }
-                  >
-                    Change Attendance
-                  </Button>
-                )}
-              </Box>
-            </Paper>
-          </Box>
-        ))}
+                  )}
+                </Box>
+              </Paper>
+            </Box>
+          )
+        )}
     </Box>
   );
 };
