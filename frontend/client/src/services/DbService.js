@@ -55,12 +55,17 @@ const get_events = () => {
   return axiosInstance.get("get_events");
 };
 
+const get_event = (event_id) => {
+  return axiosInstance.get("get_event", event_id);
+};
+
 const DbService = {
   create_event,
   delete_event,
   edit_event,
   update_attendance,
   get_events,
+  get_event,
 };
 
 export default DbService;

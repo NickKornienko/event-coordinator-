@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Event.associate = (models) => {
     Event.hasMany(models.Attendee, { foreignKey: "eventId" });
+    Event.hasMany(models.NonRegisteredAttendee, { foreignKey: "eventId" });
     Event.belongsTo(models.User, { foreignKey: "hostId" });
   };
 

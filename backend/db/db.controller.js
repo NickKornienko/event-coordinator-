@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-const { User, Event, Attendee } = require("../db/db");
+const { User, Event, Attendee, NonRegisteredAttendee } = require("../db/db");
 
 const create_event = async (req, res) => {
   const { eventName, numberOfSlots, date, time } = req.body;
@@ -51,11 +51,11 @@ const get_events = async (req, res) => {
 
   try {
     const events = await Event.findAll({
-      attributes: ["eventName", "date", "time"],
+      attributes: ["eventName", "date", "time", "size"],
       include: [
         {
           model: Attendee,
-          attributes: ["role"], // Add role to the attributes if you want to include it
+          attributes: ["role"],
           include: [
             {
               model: User,
@@ -64,26 +64,107 @@ const get_events = async (req, res) => {
           ],
           required: false,
         },
+        {
+          model: NonRegisteredAttendee,
+          attributes: ["name"],
+          required: false,
+        },
       ],
     });
 
-    const formattedEvents = events.map((event) => ({
-      eventName: event.eventName,
-      date: event.date,
-      time: event.time,
-      size: event.size,
-      attendees: event.Attendees.map((attendee) => ({
-        name: attendee.User.name,
-        role: attendee.role,
-      })),
-    }));
+    const formattedEvents = events.map((event) => {
+      const attendees = [
+        ...event.Attendees.map((attendee) => ({
+          name: attendee.User.name,
+          role: attendee.role,
+        })),
+        ...event.NonRegisteredAttendees.map((attendee) => ({
+          name: attendee.name,
+          role: "attendee",
+        })),
+      ];
 
-    console.log("attendees: ", formattedEvents[0].attendees)
+      while (attendees.length < event.size) {
+        attendees.push({
+          name: "empty",
+          role: "add user",
+        });
+      }
+
+      return {
+        eventName: event.eventName,
+        date: event.date,
+        time: event.time,
+        size: event.size,
+        attendees,
+      };
+    });
+
+    console.log("attendees: ", formattedEvents[0].attendees);
 
     res.status(200).send(formattedEvents);
   } catch (error) {
     console.error("Error getting events: ", error);
     res.status(500).send("Error getting events");
+  }
+};
+
+const get_event = async (req, res) => {
+  const { eventId } = req.params;
+  try {
+    const event = await Event.findByPk(eventId, {
+      attributes: ["eventName", "date", "time", "size"],
+      include: [
+        {
+          model: Attendee,
+          attributes: ["role"],
+          include: [
+            {
+              model: User,
+              attributes: ["name"],
+            },
+          ],
+          required: false,
+        },
+        {
+          model: NonRegisteredAttendee,
+          attributes: ["name"],
+          required: false,
+        },
+      ],
+    });
+
+    if (event) {
+      const attendees = [
+        ...event.Attendees.map((attendee) => ({
+          name: attendee.User.name,
+          role: attendee.role,
+        })),
+        ...event.NonRegisteredAttendees.map((attendee) => ({
+          name: attendee.name,
+          role: "attendee",
+        })),
+      ];
+
+      while (attendees.length < event.size) {
+        attendees.push({
+          name: "empty",
+          role: "add user",
+        });
+      }
+
+      res.json({
+        eventName: event.eventName,
+        date: event.date,
+        time: event.time,
+        size: event.size,
+        attendees,
+      });
+    } else {
+      res.status(404).json({ message: "Event not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -93,4 +174,5 @@ module.exports = {
   edit_event,
   update_attendance,
   get_events,
+  get_event,
 };
