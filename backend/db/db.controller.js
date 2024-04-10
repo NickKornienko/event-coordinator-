@@ -108,10 +108,11 @@ const get_events = async (req, res) => {
   }
 };
 
-const get_event = async (req, res) => {
+const get_event_by_id = async (req, res) => {
   const { eventId } = req.params;
   try {
-    const event = await Event.findByPk(eventId, {
+    const event = await Event.findOne({
+      where: { idHash: eventId },
       attributes: ["idHash", "eventName", "date", "time", "size"],
       include: [
         {
@@ -174,5 +175,5 @@ module.exports = {
   edit_event,
   update_attendance,
   get_events,
-  get_event,
+  get_event_by_id,
 };

@@ -7,6 +7,6 @@ router.delete("/delete_event", dbController.delete_event);
 router.post("/edit_event", dbController.edit_event);
 router.post("/update_attendance", dbController.update_attendance);
 router.get("/get_events", dbController.get_events);
-router.get("/get_event", dbController.get_event);
+router.get("/get_event_by_id", dbController.get_event_by_id);
 
 module.exports = router;

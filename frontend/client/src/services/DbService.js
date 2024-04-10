@@ -55,8 +55,8 @@ const get_events = () => {
   return axiosInstance.get("get_events");
 };
 
-const get_event = (event_id) => {
-  return axiosInstance.get("get_event", event_id);
+const get_event_by_id = (event_id) => {
+  return axiosInstance.get("get_event_by_id", event_id);
 };
 
 const DbService = {
@@ -65,7 +65,7 @@ const DbService = {
   edit_event,
   update_attendance,
   get_events,
-  get_event,
+  get_event_by_id,
 };
 
 export default DbService;

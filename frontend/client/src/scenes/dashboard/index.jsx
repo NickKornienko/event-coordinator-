@@ -60,7 +60,7 @@ const Dashboard = () => {
   };
 
   const generateLink = (eventId) => {
-    const newLink = `${window.location.origin}/external-event/${eventId}`;
+    const newLink = `${window.location.origin}/external_event/${eventId}`;
     setLinks((prevLinks) => ({ ...prevLinks, [eventId]: newLink }));
   };
 

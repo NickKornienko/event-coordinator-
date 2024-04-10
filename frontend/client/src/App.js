@@ -17,6 +17,7 @@ import Dashboard from "./scenes/dashboard";
 import ChangePassword from "./scenes/change_password";
 import Account from "./scenes/account";
 import CreateEvent from "./scenes/create_event";
+import ExternalEvent from "./scenes/external_event"; // Import ExternalEvent from the correct file
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -54,6 +55,10 @@ function App() {
                     }
                   />
                   <Route path="/register" element={<Register />} />
+                  <Route
+                    path="/external_event/:id"
+                    element={<ExternalEvent />}
+                  />
                   {isLoggedIn ? (
                     <>
                       <Route
