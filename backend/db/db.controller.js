@@ -51,7 +51,7 @@ const get_events = async (req, res) => {
 
   try {
     const events = await Event.findAll({
-      attributes: ["eventName", "date", "time", "size"],
+      attributes: ["idHash", "eventName", "date", "time", "size"],
       include: [
         {
           model: Attendee,
@@ -97,10 +97,9 @@ const get_events = async (req, res) => {
         time: event.time,
         size: event.size,
         attendees,
+        id: event.idHash,
       };
     });
-
-    console.log("attendees: ", formattedEvents[0].attendees);
 
     res.status(200).send(formattedEvents);
   } catch (error) {
@@ -113,7 +112,7 @@ const get_event = async (req, res) => {
   const { eventId } = req.params;
   try {
     const event = await Event.findByPk(eventId, {
-      attributes: ["eventName", "date", "time", "size"],
+      attributes: ["idHash", "eventName", "date", "time", "size"],
       include: [
         {
           model: Attendee,
@@ -159,6 +158,7 @@ const get_event = async (req, res) => {
         time: event.time,
         size: event.size,
         attendees,
+        id: event.idHash,
       });
     } else {
       res.status(404).json({ message: "Event not found" });

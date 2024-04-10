@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define("Event", {
     eventName: {
@@ -16,6 +18,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    idHash: {
+      type: DataTypes.STRING,
+      allowNull: true, // workaround for id needing to be set before idHash
+    },
+  });
+
+  Event.addHook("afterCreate", (event, options) => {
+    event.idHash = crypto
+      .createHash("sha256")
+      .update(event.id.toString())
+      .digest("hex");
+    return event.save();
   });
 
   Event.associate = (models) => {
