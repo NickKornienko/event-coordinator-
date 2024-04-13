@@ -44,7 +44,34 @@ const delete_event = async (req, res) => {
 
 const edit_event = async (req, res) => {};
 
-const update_attendance = async (req, res) => {};
+const update_attendance = async (req, res) => {
+  const { eventId, name, email } = req.body;
+  console.log("req.body: ", req.body);
+
+  try {
+    const event = await Event.findOne({ where: { idHash: eventId } });
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    if (req.user && req.user.userId) {
+      const user = await User.findOne({ where: { id: req.user.userId } });
+      await Attendee.create({
+        userId: user.id,
+        eventId: event.id,
+        role: "Registered",
+      });
+    } else {
+      await NonRegisteredAttendee.create({ eventId: event.id, name, email });
+    }
+
+    res.status(200).json({ message: "Successfully joined the event" });
+  } catch (error) {
+    res.status(500).json({ message: "Error joining the event" });
+    console.log("Error joining the event: ", error);
+  }
+};
 
 const get_events = async (req, res) => {
   const userId = req.user.userId;

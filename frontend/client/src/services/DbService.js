@@ -41,11 +41,11 @@ const edit_event = (event_id, event_name, number_of_slots, date, time) => {
   return axiosInstance.post("edit_event", eventData);
 };
 
-const update_attendance = (event_id, attendee, response) => {
+const update_attendance = (event_id, name, email) => {
   const attendanceData = {
     eventId: event_id,
-    attendee: attendee,
-    response: response,
+    name: name,
+    email: email,
   };
 
   return axiosInstance.post("update_attendance", attendanceData);
@@ -56,7 +56,7 @@ const get_events = () => {
 };
 
 const get_event_by_id = (event_id) => {
-  return axiosInstance.get("get_event_by_id", event_id);
+  return axiosInstance.get(`/get_event_by_id/${event_id}`);
 };
 
 const DbService = {
